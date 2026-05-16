@@ -8,6 +8,7 @@ public enum PreferencesKey {
     public static let manualLocation = "manualLocation"          // JSON-encoded Location
     public static let lastKnownLocation = "lastKnownLocation"    // JSON-encoded Location
     public static let launchAtLogin = "launchAtLogin"
+    public static let didFinishOnboarding = "didFinishOnboarding"
 }
 
 /// Tiny non-SwiftUI accessor for use by `AppearanceController` (which is not a View).
@@ -47,6 +48,11 @@ public struct PreferencesStore {
     public var launchAtLogin: Bool {
         get { defaults.object(forKey: PreferencesKey.launchAtLogin) as? Bool ?? true }
         nonmutating set { defaults.set(newValue, forKey: PreferencesKey.launchAtLogin) }
+    }
+
+    public var didFinishOnboarding: Bool {
+        get { defaults.bool(forKey: PreferencesKey.didFinishOnboarding) }
+        nonmutating set { defaults.set(newValue, forKey: PreferencesKey.didFinishOnboarding) }
     }
 
     private static func encode(_ loc: Location?) -> Data? {

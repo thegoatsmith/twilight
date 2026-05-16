@@ -3,6 +3,7 @@ import SwiftUI
 @main
 struct TwilightApp: App {
 
+    @NSApplicationDelegateAdaptor(OnboardingCoordinator.self) private var onboarding
     @StateObject private var controller: AppearanceController
     private let locationProvider: LocationProvider
     private let loginItems = LoginItemManager()
