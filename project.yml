@@ -1,0 +1,47 @@
+name: Twilight
+options:
+  bundleIdPrefix: com.apisak-w
+  deploymentTarget:
+    macOS: "13.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    CODE_SIGN_STYLE: Automatic
+    CODE_SIGN_IDENTITY: "-"
+
+targets:
+  Twilight:
+    type: application
+    platform: macOS
+    sources:
+      - path: Twilight
+    info:
+      path: Twilight/Info.plist
+      properties:
+        LSUIElement: true
+        LSMinimumSystemVersion: "13.0"
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        NSLocationUsageDescription: "Twilight uses your location to compute sunrise and sunset times."
+        NSAppleEventsUsageDescription: "Twilight uses System Events to switch macOS between Light and Dark mode."
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.apisak-w.twilight
+        GENERATE_INFOPLIST_FILE: NO
+
+  TwilightTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: TwilightTests
+    dependencies:
+      - target: Twilight
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.apisak-w.twilight.tests
+        GENERATE_INFOPLIST_FILE: YES
