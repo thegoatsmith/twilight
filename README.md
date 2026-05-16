@@ -15,15 +15,13 @@ Via Homebrew (builds from source — requires Xcode):
 ```sh
 brew tap thegoatsmith/twilight
 brew install --build-from-source twilight
-twilight
-```
-
-`brew install` puts a `twilight` command on your PATH that launches the app.
-For Spotlight / Launchpad / Dock integration, symlink it once:
-
-```sh
 ln -sfn "$(brew --prefix)/opt/twilight/Twilight.app" /Applications/Twilight.app
+open -a Twilight
 ```
+
+After the symlink, Twilight shows up in Spotlight, Launchpad, and the Dock like
+any other app. (A `twilight` command is also on your `PATH` if you prefer the
+terminal.)
 
 ## Build
 
