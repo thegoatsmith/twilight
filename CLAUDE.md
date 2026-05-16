@@ -81,3 +81,5 @@ All state lives in `UserDefaults` via `PreferencesStore`. Keys are centralized i
 - Sun times and all internal `Date`s are UTC; only the UI formats to local time.
 - The app uses `LSUIElement = true` (set in `project.yml`, not Info.plist directly) — there is no Dock icon and no main window beyond MenuBarExtra/Settings.
 - Code signing is set to ad-hoc (`CODE_SIGN_IDENTITY: "-"`) for local dev; do not change without reason.
+- Commit atomically: one logical change per commit, using the `<type>: <summary>` style of existing commits (`feat:`, `fix:`, `docs:`, …). Don't bundle unrelated edits — split them.
+- Behavior changes ship with tests: add or update an `XCTestCase` in `TwilightTests/` for any change under `Core/`, `Location/`, or `Persistence/`, using the protocol fakes in `TestDoubles.swift`. Pure UI tweaks (styling, SF Symbol swaps) are exempt.
