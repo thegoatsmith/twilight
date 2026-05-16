@@ -80,10 +80,11 @@ struct SettingsView: View {
                         Button {
                             enterPickingMode()
                         } label: {
-                            Image(systemName: "pencil")
-                                .imageScale(.medium)
+                            Image(systemName: "pencil.circle.fill")
+                                .imageScale(.large)
+                                .foregroundStyle(.secondary)
                         }
-                        .buttonStyle(.borderless)
+                        .buttonStyle(.plain)
                         .help("Change city")
                     }
                 }
