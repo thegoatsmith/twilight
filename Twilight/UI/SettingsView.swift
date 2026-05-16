@@ -74,11 +74,17 @@ struct SettingsView: View {
                 }
             } else if let city = controller.location {
                 LabeledContent("City") {
-                    HStack(spacing: 8) {
+                    HStack(spacing: 6) {
                         Text(city.displayName ?? "Selected")
                             .foregroundStyle(.secondary)
-                        Button("Change") { enterPickingMode() }
-                            .buttonStyle(.link)
+                        Button {
+                            enterPickingMode()
+                        } label: {
+                            Image(systemName: "pencil")
+                                .imageScale(.medium)
+                        }
+                        .buttonStyle(.borderless)
+                        .help("Change city")
                     }
                 }
             }
