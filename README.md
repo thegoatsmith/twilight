@@ -8,6 +8,16 @@ manual choice until the next sun event.
 - No third-party dependencies
 - Open source, MIT
 
+## Install
+
+Via Homebrew (builds from source — requires Xcode):
+
+```sh
+brew tap thegoatsmith/twilight
+brew install --build-from-source twilight
+ln -sfn "$(brew --prefix)/opt/twilight/Twilight.app" /Applications/Twilight.app
+```
+
 ## Build
 
 ```sh
