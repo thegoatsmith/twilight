@@ -23,6 +23,14 @@ public final class CityResolver: NSObject, ObservableObject, MKLocalSearchComple
             .store(in: &bag)
     }
 
+    /// Clears the query and any pending suggestions without firing another search.
+    public func clear() {
+        completer.cancel()
+        completer.queryFragment = ""
+        suggestions = []
+        query = ""
+    }
+
     /// Resolves a completion into a coordinate-bearing `Location`.
     public func resolve(_ completion: MKLocalSearchCompletion) async -> Location? {
         let request = MKLocalSearch.Request(completion: completion)

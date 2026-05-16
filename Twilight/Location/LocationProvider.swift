@@ -26,13 +26,16 @@ public final class CoreLocationProvider: NSObject, LocationProvider, CLLocationM
 
     private let subject = CurrentValueSubject<Location?, Never>(nil)
     private let manager = CLLocationManager()
+    private let geocoder = CLGeocoder()
     private let prefs: PreferencesStore
 
     public init(preferences: PreferencesStore = PreferencesStore()) {
         self.prefs = preferences
         super.init()
         manager.delegate = self
-        manager.desiredAccuracy = kCLLocationAccuracyKilometer
+        // Sunrise/sunset only needs city-level precision; request the coarsest
+        // useful accuracy for privacy.
+        manager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
         authorizationStatus = manager.authorizationStatus
 
         // Boot with whatever is stored.
@@ -74,13 +77,24 @@ public final class CoreLocationProvider: NSObject, LocationProvider, CLLocationM
 
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let last = locations.last else { return }
-        let loc = Location(latitude: last.coordinate.latitude,
-                           longitude: last.coordinate.longitude,
-                           displayName: nil)
-        prefs.lastKnownLocation = loc
-        subject.send(loc)
-        // One-shot is enough for our use case; we don't need continuous updates.
+        // Round to ~11km — sunrise/sunset don't need more, and storing coarser
+        // coordinates limits what's persisted on disk.
+        let lat = (last.coordinate.latitude * 10).rounded() / 10
+        let lon = (last.coordinate.longitude * 10).rounded() / 10
+        let initial = Location(latitude: lat, longitude: lon, displayName: nil)
+        prefs.lastKnownLocation = initial
+        subject.send(initial)
         manager.stopUpdatingLocation()
+
+        geocoder.reverseGeocodeLocation(last) { [weak self] placemarks, _ in
+            guard let self else { return }
+            let name = placemarks?.first?.locality
+                    ?? placemarks?.first?.subAdministrativeArea
+                    ?? placemarks?.first?.administrativeArea
+            let updated = Location(latitude: lat, longitude: lon, displayName: name)
+            self.prefs.lastKnownLocation = updated
+            self.subject.send(updated)
+        }
     }
 
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

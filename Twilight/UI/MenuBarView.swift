@@ -13,7 +13,7 @@ struct MenuBarView: View {
             actionButtons
             Divider()
             HStack {
-                Button("Preferences…") { Self.openSettings() }
+                preferencesButton
                 Spacer()
                 Button("Quit") { NSApp.terminate(nil) }
             }
@@ -85,13 +85,21 @@ struct MenuBarView: View {
         .buttonStyle(.borderless)
     }
 
-    static func openSettings() {
+    @ViewBuilder
+    private var preferencesButton: some View {
         if #available(macOS 14, *) {
-            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            SettingsLink {
+                Text("Preferences…")
+            }
+            .simultaneousGesture(TapGesture().onEnded {
+                NSApp.activate(ignoringOtherApps: true)
+            })
         } else {
-            NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+            Button("Preferences…") {
+                NSApp.activate(ignoringOtherApps: true)
+                NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+            }
         }
-        NSApp.activate(ignoringOtherApps: true)
     }
 
     private var automationWarning: some View {
